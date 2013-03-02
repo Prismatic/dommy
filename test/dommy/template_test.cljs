@@ -120,3 +120,12 @@
 (deftest nested-deftemplate
   (is= "<ul class=\"class1\"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li></ul>"
        (.-outerHTML (nested-template 5))))
+
+(deftest nil-in-template
+  (is= "<span></span>"
+       (.-outerHTML (template/node [:span nil])))
+  (is= "<ul><li>0</li><li>2</li></ul>"
+       (.-outerHTML (template/node [:ul (for [i (range 3)]
+                                          (when (even? i)
+                                            [:li i]))]))))
+

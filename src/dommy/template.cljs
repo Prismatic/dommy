@@ -71,6 +71,9 @@
        (do (doseq [child data] (->document-fragment result-frag child))
            result-frag)
        
+       (nil? data)
+       result-frag
+
        :else 
        (throw-unable-to-make-node data))))
 
