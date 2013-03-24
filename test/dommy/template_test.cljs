@@ -2,6 +2,8 @@
   (:require [dommy.template :as template])
   (:require-macros [dommy.template-compile :as template-compile])
   (:use-macros [dommy.template-compile :only [deftemplate]]
+               [dommy.macros :only [deftempl defctempl
+                                    defnode defcnode]]
                [cljs-test.core :only [is is= deftest]]))
 
 
@@ -105,6 +107,31 @@
     (doseq [e [e2 e2c]] (is (-> e (.getAttribute "selected") (nil?))))
     (doseq [e [e3 e3c]] (is (-> e (.getAttribute "selected") (nil?))))))
 
+(deftempl templ-name [name]
+  [:div#name name])
+
+(deftest deftempl
+  (is= "<div id=\"name\">David</div>"
+       (.-outerHTML (templ-name "David"))))
+
+(deftempl ctempl-name [name]
+  [:div#name name])
+
+(deftest defctempl
+  (is= "<div id=\"name\">David</div>"
+       (.-outerHTML (ctempl-name "David"))))
+
+(defnode node-name [:div#name "David"])
+
+(deftest defnode
+  (is= "<div id=\"name\">David</div>"
+       (.-outerHTML node-name)))
+
+(defcnode cnode-name [:div#name "David"])
+
+(deftest defcnode
+  (is= "<div id=\"name\">David</div>"
+       (.-outerHTML cnode-name)))
 
 (deftemplate simple-template [[href anchor]]
     [:a.anchor {:href href} ^:text anchor])
@@ -112,7 +139,6 @@
 (deftest  deftemplate
   (is= "<a class=\"anchor\" href=\"http://somelink.html\">some-text</a>"
        (.-outerHTML (simple-template ["http://somelink.html" "some-text"]))))
-
 
 (deftemplate nested-template [n]
   [:ul.class1 (for [i (range n)] [:li i])])
