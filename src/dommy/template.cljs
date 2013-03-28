@@ -15,10 +15,12 @@
   [node k v]
   (when v 
     (case k
-      :class (dommy/add-class! node v)
+      :class (doseq [c (.split v " ")]
+               (when (pos? (.-length c))
+                 (dommy/add-class! node c)))
       :classes (doseq [c v] (dommy/add-class! node c))
       :style (.setAttribute node (name k) (style-str v))
-      (.setAttribute node (name k) v)))) 
+      (.setAttribute node (name k) v))))
 
 (defn next-css-index [s start-idx]
   "index of css character (#,.) in base-element. bottleneck"
