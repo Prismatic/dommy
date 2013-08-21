@@ -45,6 +45,14 @@
     (dommy/set-value! el "")
     (is= "" (dommy/value el))))
 
+(deftest parent
+  (let [container (node [:div])
+        el (node [:div [:div.inner "foo"]])]
+    (is= el (dommy/parent (sel1 el :.inner)))
+    (is= nil (dommy/parent el))
+    (dommy/append! container el)
+    (is= container (dommy/parent el))))
+
 (deftest append!
   (let [container (node [:div])
         el (node [:span "test"])]
