@@ -3,8 +3,8 @@
 
 (declare node)
 
-(defn constant? [data]
-  (some #(% data) [number? keyword? string?]))
+(def constant? [data]
+  ((some-fn number? keyword? string?) data))
 
 (defn all-constant? [data]
   (cond
