@@ -50,13 +50,14 @@
          (if-let [class-list (.-classList elem)]
            (doseq [class (.split classes #"\s+")]
              (.add class-list class))
-           (let [class-name (.-className elem)]
+           (if-let [class-name (.-className elem)]
              (doseq [class (.split classes #"\s+")]
                (when-not (class-index class-name class)
                  (set! (.-className elem)
                        (if (identical? class-name "")
                          class
-                         (str class-name " " class))))))))
+                         (str class-name " " class)))))
+             (set! (.-className elem) classes))))
        elem))
   ([elem classes & more-classes]
      (let [elem (node elem)]
