@@ -5,7 +5,8 @@
   (:require
    [cljs-test.core :as test]
    [dommy.utils :as utils]
-   [dommy.core :as dommy]))
+   [dommy.core :as dommy]
+   [dommy.template :as template]))
 
 (def body js/document.body)
 
@@ -121,6 +122,42 @@
   ;; Simple
   (dommy/append! body (node [:div#foo]))
   (is= (.-tagName (sel1 :#foo)) "DIV")
+  ;; Simple id selector on DocumentFragment
+  (is=
+   "<div id=\"id1\"></div>"
+   (.-outerHTML
+    (sel1
+     (template/->node-like
+      (template/html->nodes
+       "<div id=\"id1\"></div>"))
+     :#id1)))
+  ;; Simple class unique-selector on DocumentFragment
+  (is=
+   "<div class=\"class1\"></div>"
+   (.-outerHTML
+    (sel1
+     (template/->node-like
+      (template/html->nodes
+       "<div class=\"class1\"></div>"))
+     :.class1)))
+  ;; Simple tagname unique-selector on DocumentFragment
+  (is=
+   "<div class=\"class1\"></div>"
+   (.-outerHTML
+    (sel1
+     (template/->node-like
+      (template/html->nodes
+       "<div class=\"class1\"></div>"))
+     :div)))
+  ;; Simple class selector on DocumentFragment
+  (is=
+   2
+   (.-length
+    (sel
+     (template/->node-like
+      (template/html->nodes
+       "<div class=\"class1\"></div><div class=\"class1\"></div>"))
+     :.class1)))
   ;; Evaluated
   (let [bar :#bar
         bar-el (node bar)]
