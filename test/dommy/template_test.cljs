@@ -189,7 +189,15 @@
    (.-outerHTML
     (doto (template/node [:div])
       (.appendChild
-       (template/->node-like (list :.class1 :.class2 :.class3)))))))
+       (template/->node-like (list :.class1 :.class2 :.class3))))))
+  (is=
+   "<div><!-- commented out <div class=\"class3\"></div>--></div>"
+   (.-outerHTML
+    (.querySelector
+     (template/->node-like
+      (template/html->nodes
+       "<div><!-- commented out <div class=\"class3\"></div>--></div>"))
+     "div"))))
 
 (deftemplate span-wrapper [content]
   [:span content])

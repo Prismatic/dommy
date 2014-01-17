@@ -102,6 +102,9 @@
   js/Text
   (-elem [this] this)
 
+  js/Comment
+  (-elem [this] this)
+
   js/Document
   (-elem [this] this)
 

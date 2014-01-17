@@ -70,8 +70,12 @@
          #(= "body" %) `js/document.body
          #(= "head" %) `js/document.head
          #(and (= 'js/document base) (id-selector? %)) `(by-id ~data)
-         class-selector? `(aget (by-class ~base ~data) 0)
-         tag-selector? `(aget (by-tag ~base ~data) 0)
+         class-selector? `(if (= js/DocumentFragment (type ~base))
+                            (.querySelector (node ~base) ~(selector-form data))
+                            (aget (by-class ~base ~data) 0))
+         tag-selector? `(if (= js/DocumentFragment (type ~base))
+                          (.querySelector (node ~base) ~(selector-form data))
+                          (aget (by-tag ~base ~data) 0))
          (query-selector base data))
        (query-selector base data)))
   ([data]
@@ -81,8 +85,12 @@
   ([base data]
      (if (constant? data)
        (condp #(%1 %2) (name data)
-         class-selector? `(by-class ~base ~data)
-         tag-selector? `(by-tag ~base ~data)
+         class-selector? `(if (= js/DocumentFragment (type ~base))
+                            (.querySelectorAll (node ~base) ~(selector-form data))
+                            (by-class ~base ~data))
+         tag-selector? `(if (= js/DocumentFragment (type ~base))
+                          (.querySelectorAll (node ~base) ~(selector-form data))
+                          (by-tag ~base ~data))
          (query-selector-all base data))
        (query-selector-all base data)))
   ([data]
