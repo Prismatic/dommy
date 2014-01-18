@@ -12,7 +12,8 @@
                               [:timezone "-8"]]]
   :plugins [[lein-cljsbuild "0.3.2"]]
   :hooks [leiningen.cljsbuild]
-  :dependencies [[crate "0.2.3" :scope "dev"] ;; for perf test
+  :dependencies [[xnlogic/clobber "0.1.0-SNAPSHOT"]
+                 [crate "0.2.3" :scope "dev"] ;; for perf test
                  [prismatic/cljs-test "0.0.6"]]
   :cljsbuild
     {:builds

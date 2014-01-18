@@ -1,4 +1,5 @@
-(ns dommy.utils)
+(ns dommy.utils
+  (:require clobber.util))
 
 (defn dissoc-in
   "Dissociate this keyseq from m, removing any empty maps created as a result
@@ -11,5 +12,4 @@
         (when-not (empty? res)
           res)))))
 
-(defn ->Array [array-like]
-  (.call js/Array.prototype.slice array-like))
+(def ->Array clobber.util/->array)

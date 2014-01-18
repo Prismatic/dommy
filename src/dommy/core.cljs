@@ -9,6 +9,8 @@
   (:use-macros
    [dommy.macros :only [sel sel1]])
   (:require
+   clobber.browser.node-list
+   clobber.util
    [clojure.string :as str]
    [dommy.utils :as utils]
    [dommy.attrs :as attrs]
@@ -36,7 +38,7 @@
 (def bounding-client-rect attrs/bounding-client-rect)
 (def scroll-into-view attrs/scroll-into-view)
 (def dissoc-in utils/dissoc-in)
-(def ->Array utils/->Array)
+(def ->Array clobber.util/->array)
 
 (defn set-html!
   [elem html]
@@ -59,6 +61,9 @@
 
 (defn value [elem]
   (-> elem template/->node-like .-value))
+
+(defn tag-name [elem]
+  (.-tagName (template/->node-like elem)))
 
 (defn set-value!
   [elem value]
@@ -176,9 +181,9 @@
    time of this `matches-pred` call (may return outdated results
    if you fuck with the DOM)"
   ([base selector]
-     (let [matches (sel (template/->node-like base) selector)]
+     (let [matches (set (sel (template/->node-like base) selector))]
        (fn [elem]
-         (-> matches (.indexOf elem) (>= 0)))))
+         (contains? matches elem))))
   ([selector]
      (matches-pred js/document selector)))
 
@@ -346,3 +351,18 @@
         (.dispatchEvent node (update-event! event)))
       (.fireEvent node (str "on" (name event-type))
                   (update-event! (.createEventObject js/document))))))
+
+(defn by-id [id]
+  (js/document.getElementById (name id)))
+
+(defn by-class
+  ([base class-name]
+   (.getElementsByClassName (template/->node-like base) (name class-name)))
+  ([class-name]
+     (by-class js/document class-name)))
+
+(defn by-tag
+  ([base tag-name]
+   (.getElementsByTagName (template/->node-like base) (name tag-name)))
+  ([tag-name]
+   (by-tag js/document tag-name)))
