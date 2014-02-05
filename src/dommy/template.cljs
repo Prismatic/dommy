@@ -1,7 +1,8 @@
 (ns dommy.template
   (:require
    [clojure.string :as str]
-   [dommy.attrs :as attrs]))
+   [dommy.attrs :as attrs]
+   [synergize.browser :as synergize]))
 
 (def +svg-ns+ "http://www.w3.org/2000/svg")
 (def +svg-tags+ #{"svg" "g" "rect" "circle" "clipPath" "path" "line" "polygon" "polyline" "text" "textPath"})
@@ -155,4 +156,4 @@
 (defn html->nodes [html]
   (let [parent (.createElement js/document "div")]
     (.insertAdjacentHTML parent "beforeend" html)
-    (->> parent .-childNodes (.call js/Array.prototype.slice) seq)))
+    (->> parent .-childNodes synergize/node-list)))

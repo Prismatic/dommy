@@ -9,6 +9,7 @@
   (:use-macros
    [dommy.macros :only [sel sel1]])
   (:require
+   [synergize.browser :refer [node-list]]
    [clojure.string :as str]
    [dommy.utils :as utils]
    [dommy.attrs :as attrs]
@@ -36,7 +37,6 @@
 (def bounding-client-rect attrs/bounding-client-rect)
 (def scroll-into-view attrs/scroll-into-view)
 (def dissoc-in utils/dissoc-in)
-(def ->Array utils/->Array)
 
 (defn set-html!
   [elem html]
@@ -176,9 +176,9 @@
    time of this `matches-pred` call (may return outdated results
    if you fuck with the DOM)"
   ([base selector]
-     (let [matches (sel (template/->node-like base) selector)]
+     (let [matches (set (sel (template/->node-like base) selector))]
        (fn [elem]
-         (-> matches (.indexOf elem) (>= 0)))))
+         (contains? matches elem))))
   ([selector]
      (matches-pred js/document selector)))
 

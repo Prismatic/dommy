@@ -15,7 +15,8 @@
             [com.cemerick/austin "0.1.3"]]
   :hooks [leiningen.cljsbuild]
   :dependencies [[crate "0.2.3" :scope "dev"] ;; for perf test
-                 [com.cemerick/clojurescript.test "0.2.1"]]
+                 [com.cemerick/clojurescript.test "0.2.1"]
+                 [xnlogic/synergize "0.1.0-SNAPSHOT"]]
   :cljsbuild
   {:builds
    {:test {:source-paths ["src" "test"]

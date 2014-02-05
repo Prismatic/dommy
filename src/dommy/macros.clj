@@ -54,14 +54,14 @@
 (defmacro by-class
   ([base data]
      (let [data (-> data string-or-keyword (str/replace "." ""))]
-       `(dommy.utils/->Array
+       `(synergize.browser/node-list
          (.getElementsByClassName (node ~base) ~data))))
   ([data]
      `(by-class js/document ~data)))
 
 (defmacro by-tag
   ([base data]
-     `(dommy.utils/->Array
+     `(synergize.browser/node-list
        (.getElementsByTagName (node ~base) ~(string-or-keyword data))))
   ([data]
      `(by-tag js/document ~data)))
@@ -70,7 +70,7 @@
   `(.querySelector (node ~base) ~(selector-form data)))
 
 (defn query-selector-all [base data]
-  `(dommy.utils/->Array
+  `(synergize.browser/node-list
     (.querySelectorAll (node ~base) ~(selector-form data))))
 
 (defmacro sel1

@@ -413,13 +413,6 @@
     (is (= (dommy/px el :height) 0))
     (is (= (dommy/px el :width) 1))))
 
-(deftest ->Array
-  (let [array (utils/->Array (js* "{length: 2, 0: 'lol', 1: 'wut'}"))]
-    (is (instance? js/Array array))
-    (is (= (.-length array) 2))
-    (is (= (aget array 0) "lol"))
-    (is (= (aget array 1) "wut"))))
-
 (deftest bounding-client-rect
   (let [el (doto (node [:div {:style {:position "absolute" :left "100px" :top "200px"}}])
              (->> (dommy/append! js/document.body)))

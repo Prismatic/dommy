@@ -11,9 +11,6 @@
         (when-not (empty? res)
           res)))))
 
-(defn ->Array [array-like]
-  (.call js/Array.prototype.slice array-like))
-
 (defn string-or-keyword [s]
   (if (keyword? s)
     (-> (str s) (subs 1))
