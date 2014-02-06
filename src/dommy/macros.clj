@@ -126,25 +126,29 @@
      (str/join " " classes)
      id]))
 
-(defmacro compile-compound [[node-key & rest]]
-  (let [literal-attrs (when (map? (first rest)) (first rest))
-        var-attrs (when (and (not literal-attrs) (-> rest first meta :attrs))
-                    (first rest))
-        children (drop (if (or literal-attrs var-attrs) 1 0) rest)
+(defmacro compile-compound [[node-key & r]]
+  (let [literal-attrs (when (map? (first r)) (first r))
+        var-attrs (when (and (not literal-attrs) (-> r first meta :attrs))
+                    (first r))
+        children (drop (if (or literal-attrs var-attrs) 1 0) r)
         [tag class-str id] (parse-keyword node-key)
+        is-sym (gensym "is")
         dom-sym (gensym "dom")
         element-ns (if (+svg-tags+ tag) +svg-ns+ +default-ns+)]
-    `(let [~dom-sym (.createElementNS js/document ~element-ns ~(string-or-keyword tag))]
+    `(let [~is-sym (or (:is ~literal-attrs) (:is ~var-attrs))
+           ~dom-sym (if ~is-sym
+                      (.createElementNS js/document ~element-ns ~(string-or-keyword tag) ~is-sym)
+                      (.createElementNS js/document ~element-ns ~(string-or-keyword tag)))]
        ~@(when-not (empty? class-str)
            [`(set! (.-className ~dom-sym) ~class-str)])
        ~@(when id
            [`(.setAttribute ~dom-sym "id" ~id)])
-       ~@(for [[k v] literal-attrs]
+       ~@(for [[k v] (dissoc literal-attrs :is)]
            (if (keyword? k)
              `(compile-add-attr! ~dom-sym ~k ~v)
              `(dommy.core/set-attr! ~dom-sym ~k ~v)))
        ~@(when var-attrs
-           [`(doseq [[k# v#] ~var-attrs]
+           [`(doseq [[k# v#] (dissoc ~var-attrs :is)]
                (dommy.core/set-attr! ~dom-sym k# v#))])
        ~@(for [c children]
            `(.appendChild ~dom-sym (node ~c)))
