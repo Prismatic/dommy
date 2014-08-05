@@ -52,7 +52,7 @@
            (doseq [class (.split classes #"\s+")]
              (.add class-list class))
            (doseq [class (.split classes #"\s+")]
-             (let [class-name (.-className elem)]
+             (let [class-name (or (.-className elem) "")]
                (when-not (class-index class-name class)
                  (set! (.-className elem)
                        (if (identical? class-name "")
