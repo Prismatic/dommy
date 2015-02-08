@@ -250,7 +250,8 @@
        elem))
   ([elem class & classes]
      (doseq [c (conj classes class)]
-       (remove-class! elem c))))
+       (remove-class! elem c))
+     elem))
 
 (defn toggle-class!
   "(toggle-class! elem class) will add-class! if elem does not have class

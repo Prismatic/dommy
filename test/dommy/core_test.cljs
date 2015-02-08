@@ -90,7 +90,8 @@
     (dommy/add-class! el "test")
     (is (dommy/has-class? el "test"))
 
-    (dommy/remove-class! el "test")
+    (is (= el (dommy/remove-class! el "test"))
+        "remove-class! should return the element")
     (is (not (dommy/has-class? el "test")))
 
     (dommy/toggle-class! el "test")
@@ -110,10 +111,12 @@
 
 (deftest variadic-classes
   (let [el (ce :div)]
-    (dommy/add-class! el :foo :bar)
+    (is (= el (dommy/add-class! el :foo :bar))
+        "add-class! should return the element")
     (is (dommy/has-class? el :foo))
     (is (dommy/has-class? el :bar))
-    (dommy/remove-class! el :foo :bar)
+    (is (= el (dommy/remove-class! el :foo :bar))
+        "remove-class! should return the element")
     (is (not (dommy/has-class? el :foo)))
     (is (not (dommy/has-class? el :bar)))
     (dommy/add-class! el "this is" "four classes")
