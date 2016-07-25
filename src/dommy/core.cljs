@@ -30,6 +30,28 @@
 (defn class [elem]
   (.-className elem))
 
+(defn attrs
+  "Map of all attributes on the element. Attribute names returned as keywords."
+  [elem]
+  (into {}
+   (map
+    (fn [attr]
+      (let [value (.-nodeValue attr)]
+        [(keyword (.-nodeName attr))
+         (when-not (str/blank? value) value)]))
+    (array-seq (.-attributes elem)))))
+
+(defn data-attrs
+  [elem]
+  "Map of all data attributes on the element w/o data- prefix."
+  (into {}
+   (map
+    (fn [[k v]]
+      [(keyword (str/replace-first (str k) #":data-" "")) v])
+    (filter
+     (fn [[k _]] (str/starts-with? (str k) ":data-"))
+     (attrs elem)))))
+
 (defn attr [elem k]
   (when k
     (.getAttribute elem (as-str k))))
@@ -162,7 +184,7 @@
 
 (defn remove-style!
   "Remove the style of `elem` using keywords:
-  
+
       (remove-style! elem :display :color)"
   [elem & keywords]
   (let [style (.-style elem)]
