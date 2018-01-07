@@ -222,7 +222,7 @@
   "Toggles a dom attribute `k` on `elem`, optionally specifying
    the boolean value with `add?`"
   ([elem k]
-     (toggle-attr! elem k (boolean (attr elem k))))
+     (toggle-attr! elem k (not (boolean (attr elem k)))))
   ([elem k ^boolean add?]
      (if add?
        (set-attr! elem k)
